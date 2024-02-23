@@ -57,6 +57,7 @@ for /F "skip=2 tokens=2*" %%a in ('reg query HKLM\SOFTWARE\WinuxTools /v FirstRu
 if "%frun%"=="0x0" (
     goto start
 ) else (
+    cls
     reg add HKLM\Software\WinuxTools /f > nul
     reg add HKLM\Software\WinuxTools\Tweaks /f > nul
     reg add HKLM\Software\WinuxTools\Tweaks /v TDR /t REG_SZ /d "%col%[91m[9]%col%[37m" /f > nul
