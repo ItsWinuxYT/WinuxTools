@@ -1,5 +1,6 @@
 echo off
 cls
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (set "n=%%a" & set "col=%%b")
 timeout /t 1 /nobreak > nul
 reg delete HKLM\SOFTWARE\WinuxTools /f > nul
 rd %homedrive%\PROGRA~1\WinuxTools /s /q > nul
@@ -33,4 +34,4 @@ echo.
 choice /c YN /n /m "%n%                         %col%[0;37m> "
 set input=%errorlevel%
 if "%input%"=="1" start https://discord.gg/GGnfFEyhtQ
-exit /b
+exit
