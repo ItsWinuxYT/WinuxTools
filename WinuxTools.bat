@@ -425,6 +425,7 @@ goto tweaks
 rem Gaming Mode
 :gpu
 if "%gmd%"=="%col%[91m[10]%col%[37m" (
+    for /F "tokens=*" %%a in ('powershell -NoLogo -Command "(Get-CimInstance win32_VideoController).PNPDeviceID | Select-String -Pattern VEN_"') do reg add "HKLM\SYSTEM\CurrentControlSet\Enum\%%a\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties" /v MsiSupported /t REG_DWORD /d 1 /f > nul
     reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v SystemResponsiveness /t REG_DWORD /d 10 /f > nul
     reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v NoLazyMode /t REG_DWORD /d 1 /f > nul
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v AlwaysOn /t REG_DWORD /d 1 /f > nul
@@ -433,6 +434,7 @@ if "%gmd%"=="%col%[91m[10]%col%[37m" (
     reg add "HKLM\SOFTWARE\WinuxTools\Tweaks" /v GameMode /t REG_SZ /d "%col%[92m[10]%col%[37m" /f > nul
     set "gmd=%col%[92m[10]%col%[37m"
 ) else (
+    for /F "tokens=*" %%a in ('powershell -NoLogo -Command "(Get-CimInstance win32_VideoController).PNPDeviceID | Select-String -Pattern VEN_"') do reg delete "HKLM\SYSTEM\CurrentControlSet\Enum\%%a\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties" /v MsiSupported /f > nul
     reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v SystemResponsiveness /f > nul
     reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v NoLazyMode /t REG_DWORD /d 0 /f > nul
     reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v AlwaysOn /t REG_DWORD /d 0 /f > nul
