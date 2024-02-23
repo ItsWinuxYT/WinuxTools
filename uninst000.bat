@@ -29,6 +29,7 @@ goto confirm
 rem Uninstall WT
 :uninst
 rd %homedrive%\PROGRA~1\WinuxTools /s /q > nul
+reg delete HKLM\SOFTWARE\WinuxTools /v FirstRun /f > nul
 
 rem End screen
 endlocal

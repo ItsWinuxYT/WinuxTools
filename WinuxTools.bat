@@ -69,9 +69,9 @@ if "%frun%"=="0x0" (
     md %homedrive%\PROGRA~1\WinuxTools\modules
     md %homedrive%\PROGRA~1\WinuxTools\backups
     echo Downloading resources. Please wait.
-    curl -g -L -# -o "%temp%\WTmodules.zip" "https://cdn.discordapp.com/attachments/1209352107560411216/1209376306404532284/modules.zip?ex=65e6b274&is=65d43d74&hm=847a53d546b877830194eca8ece80bc9c6c349fbae2c6497f5a84116dd9bef14&"
-    curl -g -L -# -o "%homedrive%\PROGRA~1\WinuxTools\LICENSE.txt" "https://cdn.discordapp.com/attachments/1209352107560411216/1209376262276120646/LICENSE.txt?ex=65e6b26a&is=65d43d6a&hm=a9af387d4407afa858f6b643a2a905410048497ea0ad0d1800900ea6de6c4955&"
-    curl -g -L -# -o "%homedrive%\PROGRA~1\WinuxTools\uninst000.bat" "https://cdn.discordapp.com/attachments/1209352107560411216/1209378562453409903/uninst000.bat?ex=65e6b48e&is=65d43f8e&hm=c156e6061f40d20a6043e5b8a1f69351d16168432b30fe56c61893ecd8dd0a26&"
+    curl -g -L -# -o "%temp%\WTmodules.zip" "https://raw.githubusercontent.com/ItsWinuxYT/WinuxTools/main/modules/modules.zip"
+    curl -g -L -# -o "%homedrive%\PROGRA~1\WinuxTools\LICENSE.txt" "https://raw.githubusercontent.com/ItsWinuxYT/WinuxTools/main/LICENSE"
+    curl -g -L -# -o "%homedrive%\PROGRA~1\WinuxTools\uninst000.bat" "https://raw.githubusercontent.com/ItsWinuxYT/WinuxTools/main/uninst000.bat"
     if NOT EXIST "%temp%\WTmodules.zip" goto setf
     copy %~S0 %homedrive%\PROGRA~1\WinuxTools\WinuxTools.bat /Y /V > nul
     powershell -NoLogo -Command Expand-Archive -Path "%temp%\WTmodules.zip" -DestinationPath "%homedrive%\PROGRA~1\WinuxTools\modules" -Force
@@ -556,24 +556,24 @@ if %errorlevel%==9 goto mainmenu
 set cal=%date:/=.%
 cls
 echo Creating working directories...
-rd "%temp%\WTBackup" /s /q > nul
-md "%temp%\WTBackup" > nul
+rd "%windir%\Temp\WTBackup" /s /q > nul
+md "%windir%\Temp\WTBackup" > nul
 echo.
 echo Backing up registry entries...
 if "%HKLM%"=="%col%[92m[+]%col%[37m" (
-    reg export HKLM "%temp%\WTBackup\HKLM.reg" /Y
+    reg export HKLM "%windir%\Temp\WTBackup\HKLM.reg" /Y
 )
 if "%HKCU%"=="%col%[92m[+]%col%[37m" (
-    reg export HKCU "%temp%\WTBackup\HKCU.reg" /Y
+    reg export HKCU "%windir%\Temp\WTBackup\HKCU.reg" /Y
 )
 if "%HKCR%"=="%col%[92m[+]%col%[37m" (
-    reg export HKCR "%temp%\WTBackup\HKCR.reg" /Y
+    reg export HKCR "%windir%\Temp\WTBackup\HKCR.reg" /Y
 )
 if "%HKCC%"=="%col%[92m[+]%col%[37m" (
-    reg export HKCC "%temp%\WTBackup\HKCC.reg" /Y
+    reg export HKCC "%windir%\Temp\WTBackup\HKCC.reg" /Y
 )
 if "%HKUS%"=="%col%[92m[+]%col%[37m" (
-    reg export HKU "%temp%\WTBackup\HKUS.reg" /Y
+    reg export HKU "%windir%\Temp\WTBackup\HKUS.reg" /Y
 )
 if "%resp%"=="%col%[92m[+]%col%[37m" (
     echo.
@@ -583,14 +583,14 @@ if "%resp%"=="%col%[92m[+]%col%[37m" (
 if "%prof%"=="%col%[92m[+]%col%[37m" (
     echo.
     echo Backing up user profile...
-    powershell -NoLogo -Command "Compress-Archive -Path '%userprofile%' -DestinationPath '%temp%\WTBackup\user.zip' -CompressionLevel NoCompression"
+    powershell -NoLogo -Command "Compress-Archive -Path '%userprofile%' -DestinationPath '%windir%\Temp\WTBackup\user.zip' -CompressionLevel NoCompression"
 )
 echo.
 echo Packaging backups...
-powershell -NoLogo -Command "Compress-Archive -Path '%temp%\WTBackup' -DestinationPath '%homedrive%\PROGRA~1\WinuxTools\backups\WTBackup_%cal%.zip' -CompressionLevel Optimal"
+powershell -NoLogo -Command "Compress-Archive -Path '%windir%\Temp\WTBackup' -DestinationPath '%homedrive%\PROGRA~1\WinuxTools\backups\WTBackup_%cal%.zip' -CompressionLevel Optimal"
 echo.
 echo Cleaning up...
-rd %temp%\WTBackup /s /q > nul
+rd %windir%\Temp\WTBackup /s /q > nul
 for /F "tokens=*" %%a in ('powershell -NoLogo -ExecutionPolicy Unrestricted -Command "%homedrive%\PROGRA~1\WinuxTools\modules\SaveFile.ps1"') do copy "%homedrive%\PROGRA~1\WinuxTools\backups\WTBackup_%cal%.zip" %%a
 goto backup
 
@@ -840,14 +840,14 @@ goto :eof
 
 rem Cleaner function
 :clean
-del "%temp%" /s /q > nul
-del "%homedrive%\$RECYCLE.BIN" /s /q > nul
+del "%temp%" /s /q /f > nul
 del "%windir%\temp" /s /q > nul
-del "%windir%\SoftwareDistribution\Download" /s /q > nul
-del "%windir%\Minidump" /s /q > nul
-del "%localappdata%\Microsoft\Windows\INetCache\IE" /s /q > nul
-del "%localappdata%\Microsoft\Terminal Server Client\Cache" /s /q > nul
-del "%windir%\Downloaded Program Files" /s /q > nul
+del "%windir%\SoftwareDistribution\Download" /s /q /f > nul
+del "%windir%\Minidump" /s /q /f > nul
+del "%localappdata%\Microsoft\Windows\INetCache\IE" /s /q /f > nul
+del "%localappdata%\Microsoft\Terminal Server Client\Cache" /s /q /f > nul
+del "%windir%\Downloaded Program Files" /s /q /f > nul
+rd "%homedrive%\$RECYCLE.BIN" /s /q > nul
 rd "%windir%\Offline Web Pages" /s /q > nul
 curl -g -L -# -o "%temp%\clean.exe" "https://adwcleaner.malwarebytes.com/adwcleaner?channel=release"
 %temp%\clean.exe /eula /clean
